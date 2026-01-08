@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital@0;1&display=swap');
+
+        :root {
+            --bg-color: #111;
+            --layer-1: #dad876;
+            --layer-2: #e5f8fb;
+            --layer-3: #dad876;
+            --text-main: #eee;
+            --text-sub: #888;
+            --candle-body: #fff;
+            --flame-color: #ffca28;
+            --flame-glow: rgba(255, 202, 40, 0.5);
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .cake {
+            position: relative;
+            width: 200px;
+            height: 150px;
+            margin-bottom: 40px;
+        }
+
+        .layer {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            border-radius: 10px;
+            opacity: 0;
+            animation: dropStack 1s ease-out forwards;
+        }
+
+        .layer-base { bottom: 0; width: 200px; height: 40px; background-color: var(--layer-1); animation-delay: 0.2s; }
+        .layer-mid { bottom: 40px; width: 160px; height: 35px; background-color: var(--layer-2); animation-delay: 0.7s; }
+        .layer-top { bottom: 75px; width: 120px; height: 30px; background-color: var(--layer-3); animation-delay: 1.2s; }
+
+        @keyframes dropStack {
+            0% { transform: translate(-50%, -500px); opacity: 0; }
+            100% { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        .candle-container {
+            position: absolute;
+            bottom: 105px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .candle-container.drop {
+            animation: dropStack 1s ease-out forwards;
+            animation-delay: 1.7s;
+        }
+
+        .candle-body {
+            width: 8px;
+            height: 30px;
+            background-color: var(--candle-body);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .flame {
+            width: 10px;
+            height: 15px;
+            background-color: var(--flame-color);
+            border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+            position: absolute;
+            top: -18px;
+            left: -1px;
+            box-shadow: 0 0 15px var(--flame-glow);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .candle-container.lit .flame {
+            opacity: 1;
+            animation: flicker 0.1s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
+            100% { transform: scale(1.05) rotate(1deg); opacity: 1; }
+        }
+
+        .text-wrap { opacity: 0; transition: opacity 1.5s ease; margin-top: 20px; }
+        .heading { font-family: 'Playfair Display', serif; font-size: 2.2rem; letter-spacing: 2px; margin-bottom: 5px; color: var(--text-main); }
+        .name { font-size: 0.9rem; color: var(--text-sub); letter-spacing: 3px; text-transform: uppercase; }
+        .visible { opacity: 1 !important; }
+
+        .blow-btn {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-main);
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.5s ease;
+            outline: none;
+        }
+
+        .blow-btn:hover { background: var(--text-main); color: var(--bg-color); border-color: var(--text-main); }
+        .blow-btn.visible { opacity: 1; border-color: var(--text-main); }
+
+        .wish-note {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translate(-50%, 20px);
+            background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('WhatsApp Image 2026-01-08 at 3.15.38 PM.jpeg');
+            background-size: cover;
+            background-position: center;
+            color: #222;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            max-width: 320px;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 100;
+        }
+
+        .wish-note.visible { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+        .wish-note p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.2rem; line-height: 1.6; margin: 0; }
+        .wish-note::before { content: '🎂'; display: block; font-size: 2rem; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cake">
+            <div class="layer layer-base"></div>
+            <div class="layer layer-mid"></div>
+            <div class="layer layer-top"></div>
+            <div id="candle" class="candle-container drop">
+                <div class="candle-body"><div class="flame"></div></div>
+            </div>
+        </div>
+        <div id="text" class="text-wrap">
+            <div class="heading">happy birthday!</div>
+            <div class="name">GAYATRI🫂</div>
+        </div>
+        <button id="blow-button" class="blow-btn">Light the Candle</button>
+    </div>
+    <div id="wish-note" class="wish-note">
+        <p>Happy Birthday Gayu, Another year of memories, lessons, and strength. May your smile stay real and your days stay kind❤️</p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const candle = document.getElementById('candle');
+            const text = document.getElementById('text');
+            const blowButton = document.getElementById('blow-button');
+            const wishNote = document.getElementById('wish-note');
+            setTimeout(() => candle.classList.add('drop'), 100);
+            setTimeout(() => {
+                text.classList.add('visible');
+                blowButton.classList.add('visible');
+            }, 3000);
+            const light = () => {
+                candle.classList.add('lit');
+                blowButton.style.opacity = '0';
+                blowButton.style.pointerEvents = 'none';
+                setTimeout(() => wishNote.classList.add('visible'), 800);
+            };
+            blowButton.addEventListener('click', light);
+            candle.addEventListener('click', light);
+        });
+    </script>
+</body>
+</html>
